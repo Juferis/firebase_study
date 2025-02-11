@@ -1,5 +1,9 @@
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useState } from 'react';
 import styled from 'styled-components';
+import { auth } from '../firebase';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '../routes';
 
 const Wrapper = styled.div`
   height: 100%;
@@ -39,6 +43,7 @@ const Error = styled.span`
 `;
 
 export default function CreatAccount() {
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -55,23 +60,31 @@ export default function CreatAccount() {
     } else if (name === 'password') setPassword(value);
   };
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(name, email, password);
+    if (isLoading || name === '' || email === '' || password === '') return;
     try {
-      // TODO: create an account
-      // TODO: set the name of the user
-      // TODO: Redirect to the home page
+      setIsLoading(true);
+      const credentials = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log('credentials:', credentials);
+      await updateProfile(credentials.user, {
+        displayName: name,
+      });
     } catch (e) {
       // TODO: set error
     } finally {
       setIsLoading(false);
+      navigate(ROUTES.HOME);
     }
   };
 
   return (
     <Wrapper>
-      <Title>Login My SNS</Title>
+      <Title>Join My SNS</Title>
       <Form onSubmit={onSubmit}>
         <Input
           name="name"
@@ -97,11 +110,10 @@ export default function CreatAccount() {
           required
           onChange={onChange}
         />
-        {isLoading ? (
-          'Loading...'
-        ) : (
-          <Input type="submit" value="Create Account" />
-        )}
+        <Input
+          type="submit"
+          value={isLoading ? 'Loading...' : 'Create Account'}
+        />
       </Form>
       {error !== '' ? <Error>{error}</Error> : null}
     </Wrapper>
