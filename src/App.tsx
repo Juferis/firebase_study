@@ -11,14 +11,15 @@ import Login from './routes/login';
 import CreateAccount from './routes/create-account';
 import LoadingScreen from './components/loading-screen';
 
-import { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 import { useEffect, useState } from 'react';
 import { auth } from './firebase';
+import { ROUTES } from './routes';
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: ROUTES.HOME,
     element: <Layout />,
     children: [
       {
@@ -26,22 +27,22 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: 'profile',
+        path: ROUTES.PROFILE,
         element: <Profile />,
       },
     ],
   },
   {
-    path: '/login',
+    path: ROUTES.LOGIN,
     element: <Login />,
   },
   {
-    path: '/create-account',
+    path: ROUTES.CREATE_ACCOUNT,
     element: <CreateAccount />,
   },
   {
     path: '*',
-    element: <Navigate to="/" replace />,
+    element: <Navigate to={ROUTES.HOME} replace />,
   },
 ]);
 
@@ -59,11 +60,17 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
+const Wrapper = styled.div`
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+`;
+
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const init = async () => {
     await auth.authStateReady();
-    setTimeout(() => setIsLoading(false), 2000);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -71,10 +78,10 @@ function App() {
   }, []);
 
   return (
-    <>
+    <Wrapper>
       <GlobalStyle />
       {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
-    </>
+    </Wrapper>
   );
 }
 
