@@ -15,10 +15,11 @@ import styled, { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 import { useEffect, useState } from 'react';
 import { auth } from './firebase';
+import { ROUTES } from './routes';
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: ROUTES.HOME,
     element: <Layout />,
     children: [
       {
@@ -26,22 +27,22 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: 'profile',
+        path: ROUTES.PROFILE,
         element: <Profile />,
       },
     ],
   },
   {
-    path: '/login',
+    path: ROUTES.LOGIN,
     element: <Login />,
   },
   {
-    path: '/create-account',
+    path: ROUTES.CREATE_ACCOUNT,
     element: <CreateAccount />,
   },
   {
     path: '*',
-    element: <Navigate to="/" replace />,
+    element: <Navigate to={ROUTES.HOME} replace />,
   },
 ]);
 
