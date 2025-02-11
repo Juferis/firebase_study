@@ -1,4 +1,8 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from 'react-router-dom';
 
 import Layout from './components/layout';
 import Home from './routes/home';
@@ -33,6 +37,10 @@ const router = createBrowserRouter([
   {
     path: '/create-account',
     element: <CreateAccount />,
+  },
+  {
+    path: '*',
+    element: <Navigate to="/" replace />,
   },
 ]);
 
