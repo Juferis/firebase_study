@@ -10,6 +10,7 @@ import Profile from './routes/profile';
 import Login from './routes/login';
 import CreateAccount from './routes/create-account';
 import LoadingScreen from './components/loading-screen';
+import ProtectedRoute from './components/protected-route';
 
 import styled, { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
@@ -20,7 +21,11 @@ import { ROUTES } from './routes';
 const router = createBrowserRouter([
   {
     path: ROUTES.HOME,
-    element: <Layout />,
+    element: (
+      <ProtectedRoute>
+        <Layout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         path: '',
