@@ -1,13 +1,8 @@
-import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase';
-import { ROUTES } from '../routes';
 
 export default function Home() {
-  const navigate = useNavigate();
-
-  const logOut = async () => {
-    await auth.signOut();
-    navigate(ROUTES.LOGIN);
+  const logOut = () => {
+    auth.signOut();
   };
   return (
     <h1>
