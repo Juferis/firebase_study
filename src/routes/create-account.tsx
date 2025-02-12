@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import { auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../routes';
+import { FirebaseError } from 'firebase/app';
+import { FIREBASE_ERROR_MESSAGE, NOT_FOUND_ERROR } from '../constant';
 
 const Wrapper = styled.div`
   height: 100%;
@@ -18,6 +20,7 @@ const Title = styled.h1`
 `;
 const Form = styled.form`
   margin-top: 50px;
+  margin-bottom: 10px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -62,7 +65,11 @@ export default function CreatAccount() {
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    setError('');
+
     if (isLoading || name === '' || email === '' || password === '') return;
+
     try {
       setIsLoading(true);
       const credentials = await createUserWithEmailAndPassword(
@@ -74,7 +81,11 @@ export default function CreatAccount() {
         displayName: name,
       });
     } catch (e) {
-      // TODO: set error
+      if (e instanceof FirebaseError) {
+        setError(FIREBASE_ERROR_MESSAGE[e.code] || NOT_FOUND_ERROR);
+      } else {
+        setError(NOT_FOUND_ERROR);
+      }
     } finally {
       setIsLoading(false);
       navigate(ROUTES.HOME);
