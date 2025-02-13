@@ -13,6 +13,7 @@ import {
   Error,
   Form,
 } from '../components/auth-components';
+import GithubButton from '../components/github-btn';
 
 export default function CreatAccount() {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ export default function CreatAccount() {
 
   return (
     <Wrapper>
-      <Title>Join My SNS</Title>
+      <Title>Join PETTHER</Title>
       <Form onSubmit={onSubmit}>
         <Input
           name="name"
@@ -96,9 +97,10 @@ export default function CreatAccount() {
       </Form>
       {error !== '' ? <Error>{error}</Error> : null}
       <Switcher>
-        이미 계정이 이으신가요?
+        {'이미 계정이 있으신가요? '}
         <Link to={ROUTES.LOGIN}>로그인하기 &rarr;</Link>
       </Switcher>
+      <GithubButton />
     </Wrapper>
   );
 }
