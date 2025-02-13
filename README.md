@@ -1,5 +1,5 @@
-# My-SNS
-
+# Petther
+> Pet Together
 > Building a Pet Care Platform with React and Firebase
 
 ## Stack
@@ -11,7 +11,7 @@
 
 ### Login page
 
-- [] Layout
-- [] Social Login
+- [ ] Layout
+- [ ] Social Login
 
 ### Main page
