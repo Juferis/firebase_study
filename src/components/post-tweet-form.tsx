@@ -1,7 +1,8 @@
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, updateDoc } from 'firebase/firestore';
 import { useState } from 'react';
 import { styled } from 'styled-components';
-import { auth, db } from '../firebase';
+import { auth, db, storage } from '../firebase';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 const Form = styled.form`
   display: flex;
@@ -67,7 +68,12 @@ export default function PostTweetForm() {
     const { files } = event.target;
     // TODO: 파일 최대 4개 업로드로 변경
     if (files && files.length === 1) {
-      setFile(files[0]);
+      const file = files[0];
+      if (file.size <= 1024 * 1024) {
+        setFile(file);
+      } else {
+        alert('파일 크기는 1MB 이하만 가능합니다.');
+      }
     }
   };
 
@@ -78,15 +84,29 @@ export default function PostTweetForm() {
 
     try {
       setIsLoading(true);
-      await addDoc(collection(db, 'posts'), {
+      const doc = await addDoc(collection(db, 'posts'), {
         tweet,
         createdAt: Date.now(),
         username: user?.displayName || 'Anonymous',
         userId: user?.uid,
       });
+      if (file) {
+        const locationRef = ref(
+          storage,
+          `tweets/${user.uid}-${user.displayName}/${doc.id}`
+        );
+        const result = await uploadBytes(locationRef, file);
+        const url = await getDownloadURL(result.ref);
+        console.log(doc, url);
+        await updateDoc(doc, {
+          photo: url,
+        });
+      }
     } catch (e) {
       console.error(e);
     } finally {
+      setTweet('');
+      setFile(null);
       setIsLoading(false);
     }
   };
