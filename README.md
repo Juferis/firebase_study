@@ -1,4 +1,4 @@
-# Petther
+# Firebase_study
 > Building SNS with React and Firebase
 
 ## Stack
